@@ -244,7 +244,7 @@ void forward_kinematics_velocity(
             quat_mul_vec3(parent_rotation, bone_velocities(bone)) + 
             cross(parent_angular_velocity, quat_mul_vec3(parent_rotation, bone_positions(bone)));
         bone_rotation = quat_mul(parent_rotation, bone_rotations(bone));
-        bone_angular_velocity = quat_mul_vec3(parent_rotation, bone_angular_velocities(bone) + parent_angular_velocity);
+        bone_angular_velocity = quat_mul_vec3(parent_rotation, bone_angular_velocities(bone)) + parent_angular_velocity;
     }
     else
     {
@@ -372,7 +372,7 @@ void forward_kinematics_velocity_partial(
         quat_mul_vec3(parent_rotation, local_bone_velocities(bone)) + 
         cross(parent_angular_velocity, quat_mul_vec3(parent_rotation, local_bone_positions(bone)));
     global_bone_rotations(bone) = quat_mul(parent_rotation, local_bone_rotations(bone));
-    global_bone_angular_velocities(bone) = quat_mul_vec3(parent_rotation, local_bone_angular_velocities(bone) + parent_angular_velocity);
+    global_bone_angular_velocities(bone) = quat_mul_vec3(parent_rotation, local_bone_angular_velocities(bone)) + parent_angular_velocity;
     global_bone_computed(bone) = true;
 }
 
@@ -505,10 +505,10 @@ void database_build_bounds(database& db)
     db.bound_lr_min.resize(nbound_lr, db.nfeatures()); 
     db.bound_lr_max.resize(nbound_lr, db.nfeatures()); 
     
-    db.bound_sm_min.set(FLT_MAX);
-    db.bound_sm_max.set(FLT_MIN);
-    db.bound_lr_min.set(FLT_MAX);
-    db.bound_lr_max.set(FLT_MIN);
+    db.bound_sm_min.set(+FLT_MAX);
+    db.bound_sm_max.set(-FLT_MAX);
+    db.bound_lr_min.set(+FLT_MAX);
+    db.bound_lr_max.set(-FLT_MAX);
     
     for (int i = 0; i < db.nframes(); i++)
     {
